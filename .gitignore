@@ -1,0 +1,10 @@
+# General
+
+## macOS
+.DS_Store
+
+## Optional npm cache directory
+.npm
+
+## vscode
+.vscode
