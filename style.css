@@ -1,0 +1,14 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.new-task-form input {
+  border: 1px solid black;
+  padding: 5px 10px;
+}
+
+.new-task-form button {
+  background: none;
+  border: 1px solid black;
+  padding: 5px 10px;
+}
