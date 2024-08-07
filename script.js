@@ -1,25 +1,35 @@
 let taskForm = document.getElementById('task-form');
-let newTaskTitle = document.getElementById('new-task');
 let tasksList = [];
-let idNumber = 0;
 
-taskForm.addEventListener('submit', function(event) {
-    //Отменить стандарное действие кнопки и избежать обновления страницы
-    event.preventDefault();
-    
-    //Добавить новую задачу в ссписок задач
-    tasksList.push(
-      {
-      id: idNumber++,
-      title: newTaskTitle.value,
-      completed: false,
-      }
-    );
-    
-    //Обнулить значение в графе ввода
-    newTaskTitle.value = '';
+const createSubmitHandler = () => {
+  let id = 0;
+  return function () {
+    return ++id;
+  };
+};
 
-    //Отобразить список задач в консоли
-    console.log(tasksList)
-  }
-);
+const getId = createSubmitHandler();
+
+taskForm.addEventListener('submit', function (event) {
+  //Отменить стандарное действие кнопки и избежать обновления страницы
+  event.preventDefault();
+
+  //Собрать введеные в форму данные
+  const formData = new FormData(event.target);
+
+  //Путем итерации записать данные в виде объекта с парами (ключ: значение,)
+  const data = Object.fromEntries(formData.entries());
+
+  //Добавить новую задачу в ссписок задач
+  tasksList.push({
+    id: getId(),
+    completed: false,
+    ...data,
+  });
+
+  //Обнулить значение в графе ввода
+  taskForm.reset();
+
+  //Отобразить список задач в консоли
+  console.log(tasksList);
+});
