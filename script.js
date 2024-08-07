@@ -1,14 +1,14 @@
 let taskForm = document.getElementById('task-form');
 let tasksList = [];
 
-const createSubmitHandler = () => {
+const createIncrementingIdGetter = () => {
   let id = 0;
   return function () {
     return ++id;
   };
 };
 
-const getId = createSubmitHandler();
+const getTaskId = createIncrementingIdGetter();
 
 taskForm.addEventListener('submit', function (event) {
   //Отменить стандарное действие кнопки и избежать обновления страницы
@@ -22,13 +22,13 @@ taskForm.addEventListener('submit', function (event) {
 
   //Добавить новую задачу в ссписок задач
   tasksList.push({
-    id: getId(),
+    id: getTaskId(),
     completed: false,
     ...data,
   });
 
   //Обнулить значение в графе ввода
-  taskForm.reset();
+  this.reset();
 
   //Отобразить список задач в консоли
   console.log(tasksList);
