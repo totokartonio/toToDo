@@ -15,8 +15,8 @@ const getTaskId = createIncrementingIdGetter();
 //Функция для добавления задачи на страницу
 const renderTask = task => {
   const taskElement = document.createElement('div');
-  taskElement.className = 'task';
-  taskElement.setAttribute('data-attribute', task.id);
+  taskElement.classList.add('task');
+  taskElement.dataset.id = task.id;
 
   const checkbox = document.createElement('input');
   checkbox.type = 'checkbox';
@@ -25,8 +25,8 @@ const renderTask = task => {
   const titleElement = document.createElement('p');
   titleElement.textContent = task.title;
 
-  taskElement.appendChild(checkbox);
-  taskElement.appendChild(titleElement);
+  taskElement.append(checkbox, titleElement);
+  // taskElement.appendChild(titleElement);
 
   listOfTasks.append(taskElement);
 };
