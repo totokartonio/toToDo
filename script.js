@@ -1,4 +1,5 @@
 let taskForm = document.getElementById('task-form');
+let listOfTasks = document.getElementById('task-list');
 let tasksList = [];
 
 //Хендлер для добавления id
@@ -13,24 +14,30 @@ const getTaskId = createIncrementingIdGetter();
 
 //Функция для добавления задачи на страницу
 const renderTask = task => {
-  taskElement = document.createElement('div');
+  const taskElement = document.createElement('div');
   taskElement.className = 'task';
 
-  for (let key in task) {
-    let keyElement = document.createElement('div');
-    keyElement.className = `task-${key}`;
-    keyElement.textContent = `${key}: ${task[key]}`; //Почему когда я добавлял task.key значения были undefined?
-    taskElement.appendChild(keyElement);
-  }
+  taskElement.innerHTML = `
+    <div data-attribute='${task.id}'></div>
+    <input type="checkbox" />
+    <p>${task.title}
+    `;
 
-  document.getElementById('task-list').append(taskElement);
+  // for (let key in task) {
+  //   let keyElement = document.createElement('div');
+  //   keyElement.className = `task-${key}`;
+  //   keyElement.textContent = `${key}: ${task[key]}`; //Почему когда я добавлял task.key значения были undefined?
+  //   taskElement.appendChild(keyElement);
+  // }
+
+  listOfTasks.append(taskElement);
 };
 
 taskForm.addEventListener('submit', function (event) {
   //Отменить стандарное действие кнопки и избежать обновления страницы
   event.preventDefault();
 
-  form = event.target;
+  const form = event.target;
 
   //Собрать введеные в форму данные
   const formData = new FormData(form);
