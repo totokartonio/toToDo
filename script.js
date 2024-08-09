@@ -26,7 +26,6 @@ const renderTask = task => {
   titleElement.textContent = task.title;
 
   taskElement.append(checkbox, titleElement);
-  // taskElement.appendChild(titleElement);
 
   listOfTasks.append(taskElement);
 };
