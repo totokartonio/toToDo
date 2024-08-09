@@ -16,19 +16,17 @@ const getTaskId = createIncrementingIdGetter();
 const renderTask = task => {
   const taskElement = document.createElement('div');
   taskElement.className = 'task';
+  taskElement.setAttribute('data-attribute', task.id);
 
-  taskElement.innerHTML = `
-    <div data-attribute='${task.id}'></div>
-    <input type="checkbox" />
-    <p>${task.title}
-    `;
+  const checkbox = document.createElement('input');
+  checkbox.type = 'checkbox';
+  checkbox.checked = task.completed;
 
-  // for (let key in task) {
-  //   let keyElement = document.createElement('div');
-  //   keyElement.className = `task-${key}`;
-  //   keyElement.textContent = `${key}: ${task[key]}`; //Почему когда я добавлял task.key значения были undefined?
-  //   taskElement.appendChild(keyElement);
-  // }
+  const titleElement = document.createElement('p');
+  titleElement.textContent = task.title;
+
+  taskElement.appendChild(checkbox);
+  taskElement.appendChild(titleElement);
 
   listOfTasks.append(taskElement);
 };
