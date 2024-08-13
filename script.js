@@ -36,7 +36,7 @@ const renderTask = task => {
   checkbox.checked = task.completed;
 
   //Добавляю eventListener для отслеживания состояния checkbox
-  checkbox.addEventListener('change', event => checkboxHandler(task.id)(event));
+  checkbox.addEventListener('change', checkboxHandler(task.id));
 
   const titleElement = document.createElement('p');
   titleElement.textContent = task.title;
