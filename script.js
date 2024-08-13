@@ -1,3 +1,5 @@
+'use strict';
+
 let taskForm = document.getElementById('task-form');
 let listOfTasks = document.getElementById('task-list');
 let tasksList = [];
@@ -6,11 +8,22 @@ let tasksList = [];
 const createIncrementingIdGetter = () => {
   let id = 0;
   return function () {
-    return ++id;
+    return String(++id);
   };
 };
 
 const getTaskId = createIncrementingIdGetter();
+
+//Отследить изменение состояние чекбоксов
+const checkboxHandler = taskId => event => {
+  //Для удобства восприятия даю элементам те же имена, что и при ссоздании task
+  let checkbox = event.currentTarget;
+
+  tasksList = tasksList.map(task =>
+    task.id === taskId ? { ...task, completed: checkbox.checked } : task,
+  );
+  console.log(tasksList);
+};
 
 //Функция для добавления задачи на страницу
 const renderTask = task => {
@@ -21,6 +34,9 @@ const renderTask = task => {
   const checkbox = document.createElement('input');
   checkbox.type = 'checkbox';
   checkbox.checked = task.completed;
+
+  //Добавляю eventListener для отслеживания состояния checkbox
+  checkbox.addEventListener('change', checkboxHandler(task.id));
 
   const titleElement = document.createElement('p');
   titleElement.textContent = task.title;
