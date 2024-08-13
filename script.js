@@ -1,3 +1,5 @@
+'use strict';
+
 let taskForm = document.getElementById('task-form');
 let listOfTasks = document.getElementById('task-list');
 let tasksList = [];
@@ -21,6 +23,9 @@ const renderTask = task => {
   const checkbox = document.createElement('input');
   checkbox.type = 'checkbox';
   checkbox.checked = task.completed;
+
+  //Добавляю eventListener для отслеживания состояния checkbox
+  checkbox.addEventListener('change', checkboxHandler);
 
   const titleElement = document.createElement('p');
   titleElement.textContent = task.title;
@@ -60,3 +65,26 @@ taskForm.addEventListener('submit', function (event) {
   //Отобразить список задач в консоли
   console.log(tasksList);
 });
+
+//Отследить изменение состояние чекбоксов
+const checkboxHandler = event => {
+  //Для удобства восприятия даю элементам те же имена, что и при ссоздании task
+  let checkbox = event.target;
+  let taskElement = checkbox.parentElement;
+
+  if (checkbox.checked) {
+    console.log('Checked!');
+    console.log(taskElement.dataset.id);
+
+    let taskFromList = tasksList.find(task => task.id === +taskElement.dataset.id); //Для присвоения одного типа данных, Number
+    taskFromList.completed = checkbox.checked;
+    console.log(taskFromList);
+  } else {
+    console.log('Unchecked!');
+    console.log(taskElement.dataset.id);
+
+    let taskFromList = tasksList.find(task => task.id === +taskElement.dataset.id);
+    taskFromList.completed = checkbox.checked;
+    console.log(taskFromList);
+  }
+};
