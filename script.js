@@ -15,12 +15,12 @@ const createIncrementingIdGetter = () => {
 const getTaskId = createIncrementingIdGetter();
 
 //Отследить изменение состояние чекбоксов
-const checkboxHandler = (event, taskId) => {
+const checkboxHandler = taskId => event => {
   //Для удобства восприятия даю элементам те же имена, что и при ссоздании task
   let checkbox = event.currentTarget;
 
   tasksList = tasksList.map(task =>
-    task.id === taskId ? { ...task, completed: !task.completed } : task,
+    task.id === taskId ? { ...task, completed: checkbox.checked } : task,
   );
   console.log(tasksList);
 };
@@ -36,7 +36,7 @@ const renderTask = task => {
   checkbox.checked = task.completed;
 
   //Добавляю eventListener для отслеживания состояния checkbox
-  checkbox.addEventListener('change', event => checkboxHandler(event, task.id));
+  checkbox.addEventListener('change', event => checkboxHandler(task.id)(event));
 
   const titleElement = document.createElement('p');
   titleElement.textContent = task.title;
