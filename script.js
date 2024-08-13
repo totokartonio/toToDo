@@ -8,11 +8,21 @@ let tasksList = [];
 const createIncrementingIdGetter = () => {
   let id = 0;
   return function () {
-    return ++id;
+    return String(++id);
   };
 };
 
 const getTaskId = createIncrementingIdGetter();
+
+//Отследить изменение состояние чекбоксов
+const checkboxHandler = taskId => {
+  //Для удобства восприятия даю элементам те же имена, что и при ссоздании task
+  let checkbox = event.currentTarget;
+
+  let taskFromList = tasksList.find(task => task.id === taskId);
+  taskFromList.completed = checkbox.checked;
+  console.log(taskFromList);
+};
 
 //Функция для добавления задачи на страницу
 const renderTask = task => {
@@ -25,7 +35,7 @@ const renderTask = task => {
   checkbox.checked = task.completed;
 
   //Добавляю eventListener для отслеживания состояния checkbox
-  checkbox.addEventListener('change', checkboxHandler);
+  checkbox.addEventListener('change', () => checkboxHandler(task.id));
 
   const titleElement = document.createElement('p');
   titleElement.textContent = task.title;
@@ -65,26 +75,3 @@ taskForm.addEventListener('submit', function (event) {
   //Отобразить список задач в консоли
   console.log(tasksList);
 });
-
-//Отследить изменение состояние чекбоксов
-const checkboxHandler = event => {
-  //Для удобства восприятия даю элементам те же имена, что и при ссоздании task
-  let checkbox = event.target;
-  let taskElement = checkbox.parentElement;
-
-  if (checkbox.checked) {
-    console.log('Checked!');
-    console.log(taskElement.dataset.id);
-
-    let taskFromList = tasksList.find(task => task.id === +taskElement.dataset.id); //Для присвоения одного типа данных, Number
-    taskFromList.completed = checkbox.checked;
-    console.log(taskFromList);
-  } else {
-    console.log('Unchecked!');
-    console.log(taskElement.dataset.id);
-
-    let taskFromList = tasksList.find(task => task.id === +taskElement.dataset.id);
-    taskFromList.completed = checkbox.checked;
-    console.log(taskFromList);
-  }
-};
