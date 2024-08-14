@@ -34,6 +34,7 @@ const renderTask = task => {
   const checkbox = document.createElement('input');
   checkbox.type = 'checkbox';
   checkbox.checked = task.completed;
+  checkbox.classList.add('checkbox');
 
   //Добавляю eventListener для отслеживания состояния checkbox
   checkbox.addEventListener('change', checkboxHandler(task.id));
