@@ -20,6 +20,7 @@ body {
 .task {
   display: flex;
   gap: 10px;
+  margin-bottom: 5px;
   border: 1px solid black;
   align-items: center;
 }
@@ -59,4 +60,18 @@ body {
 
 .task .checkbox:checked:hover::before {
   background-color: #0088f7;
+}
+
+.delete-button {
+  background: padding-box transparent url(image/bin.svg) no-repeat center center;
+  border: 1px solid black;
+  width: 30px;
+  height: 30px;
+  margin-left: auto;
+  margin-right: 10px;
+  background-image: url(image/bin.svg);
+}
+
+.delete-button:hover {
+  background-color: #e8e8e8;
 }
