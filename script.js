@@ -25,7 +25,7 @@ const checkboxHandler = taskId => event => {
 };
 
 //Функция для удаления задачи
-const deleteTaskHandler = (taskId, taskElement) => {
+const deleteTaskHandler = (taskId, taskElement) => () => {
   taskElement.remove();
   tasksList = tasksList.filter(task => task.id !== taskId);
 
@@ -58,7 +58,7 @@ const renderTask = task => {
   deleteButton.classList.add('delete-button');
 
   //eventListener для удаления задачи
-  deleteButton.addEventListener('click', () => deleteTaskHandler(task.id, taskElement));
+  deleteButton.addEventListener('click', deleteTaskHandler(task.id, taskElement));
 
   taskElement.append(checkbox, titleElement, deleteButton);
 
