@@ -57,6 +57,7 @@ body {
 }
 
 .task {
+  padding: 5px 10px;
   display: flex;
   gap: 10px;
   border: 1px solid black;
@@ -65,7 +66,6 @@ body {
 
 .task .checkbox {
   appearance: none;
-  margin-left: 10px;
   width: 20px;
   height: 20px;
   background-color: white;
@@ -106,7 +106,6 @@ body {
   width: 30px;
   height: 30px;
   margin-left: auto;
-  margin-right: 10px;
 }
 
 .delete-button:hover {
