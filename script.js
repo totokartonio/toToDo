@@ -14,9 +14,8 @@ const createIncrementingIdGetter = () => {
 
 const getTaskId = createIncrementingIdGetter();
 
-//Отследить изменение состояние чекбоксов
+//Функция для отслеживания изменение состояние чекбоксов
 const checkboxHandler = taskId => event => {
-  //Для удобства восприятия даю элементам те же имена, что и при ссоздании task
   let checkbox = event.currentTarget;
 
   tasksList = tasksList.map(task =>
@@ -25,24 +24,43 @@ const checkboxHandler = taskId => event => {
   console.log(tasksList);
 };
 
+//Функция для удаления задачи
+const deleteTaskHandler = (taskId, taskElement) => () => {
+  taskElement.remove();
+  tasksList = tasksList.filter(task => task.id !== taskId);
+
+  console.log(tasksList);
+};
+
 //Функция для добавления задачи на страницу
 const renderTask = task => {
+  //Общий контейнер задачи
   const taskElement = document.createElement('div');
   taskElement.classList.add('task');
   taskElement.dataset.id = task.id;
 
+  //Чек-бокс
   const checkbox = document.createElement('input');
   checkbox.type = 'checkbox';
   checkbox.checked = task.completed;
   checkbox.classList.add('checkbox');
 
-  //Добавляю eventListener для отслеживания состояния checkbox
+  //eventListener для отслеживания состояния checkbox
   checkbox.addEventListener('change', checkboxHandler(task.id));
 
+  //Наименование задачи
   const titleElement = document.createElement('p');
   titleElement.textContent = task.title;
 
-  taskElement.append(checkbox, titleElement);
+  //Кнопка удаления
+  const deleteButton = document.createElement('button');
+  deleteButton.type = 'button';
+  deleteButton.classList.add('delete-button');
+
+  //eventListener для удаления задачи
+  deleteButton.addEventListener('click', deleteTaskHandler(task.id, taskElement));
+
+  taskElement.append(checkbox, titleElement, deleteButton);
 
   listOfTasks.append(taskElement);
 };
