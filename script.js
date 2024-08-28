@@ -26,43 +26,49 @@ const checkboxHandler = taskId => event => {
 
 //Функция для удаления задачи
 const deleteTaskHandler = (taskId, taskElement) => () => {
-  taskElement.remove();
   tasksList = tasksList.filter(task => task.id !== taskId);
+  renderList();
 
   console.log(tasksList);
 };
 
-//Функция для добавления задачи на страницу
-const renderTask = task => {
-  //Общий контейнер задачи
-  const taskElement = document.createElement('div');
-  taskElement.classList.add('task');
-  taskElement.dataset.id = task.id;
+//Функция для обновления списка задач на странице
+const renderList = () => {
+  const fragment = document.createDocumentFragment();
 
-  //Чек-бокс
-  const checkbox = document.createElement('input');
-  checkbox.type = 'checkbox';
-  checkbox.checked = task.completed;
-  checkbox.classList.add('checkbox');
+  tasksList.forEach(task => {
+    //Общий контейнер задачи
+    const taskElement = document.createElement('div');
+    taskElement.classList.add('task');
+    taskElement.dataset.id = task.id;
 
-  //eventListener для отслеживания состояния checkbox
-  checkbox.addEventListener('change', checkboxHandler(task.id));
+    //Чек-бокс
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.checked = task.completed;
+    checkbox.classList.add('checkbox');
 
-  //Наименование задачи
-  const titleElement = document.createElement('p');
-  titleElement.textContent = task.title;
+    //eventListener для отслеживания состояния checkbox
+    checkbox.addEventListener('change', checkboxHandler(task.id));
 
-  //Кнопка удаления
-  const deleteButton = document.createElement('button');
-  deleteButton.type = 'button';
-  deleteButton.classList.add('delete-button');
+    //Наименование задачи
+    const titleElement = document.createElement('p');
+    titleElement.textContent = task.title;
 
-  //eventListener для удаления задачи
-  deleteButton.addEventListener('click', deleteTaskHandler(task.id, taskElement));
+    //Кнопка удаления
+    const deleteButton = document.createElement('button');
+    deleteButton.type = 'button';
+    deleteButton.classList.add('delete-button');
 
-  taskElement.append(checkbox, titleElement, deleteButton);
+    //eventListener для удаления задачи
+    deleteButton.addEventListener('click', deleteTaskHandler(task.id, taskElement));
 
-  listOfTasks.append(taskElement);
+    taskElement.append(checkbox, titleElement, deleteButton);
+
+    fragment.append(taskElement);
+  });
+
+  listOfTasks.replaceChildren(fragment);
 };
 
 taskForm.addEventListener('submit', function (event) {
@@ -77,7 +83,7 @@ taskForm.addEventListener('submit', function (event) {
   //Путем итерации записать данные в виде объекта с парами (ключ: значение,)
   const data = Object.fromEntries(formData.entries());
 
-  //Добавить новую задачу в ссписок задач
+  //Добавить новую задачу в массив задач
   let newTask = {
     id: getTaskId(),
     completed: false,
@@ -89,8 +95,8 @@ taskForm.addEventListener('submit', function (event) {
   //Обнулить значение в графе ввода
   form.reset();
 
-  //Отобразить задачу на странице
-  renderTask(newTask);
+  //Отобразить список на странице
+  renderList();
 
   //Отобразить список задач в консоли
   console.log(tasksList);
