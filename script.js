@@ -32,39 +32,44 @@ const deleteTaskHandler = (taskId, taskElement) => () => {
   console.log(tasksList);
 };
 
+const renderTask = task => {
+  //Общий контейнер задачи
+  const HTMLElement = document.createElement('div');
+  HTMLElement.classList.add('task');
+  HTMLElement.dataset.id = task.id;
+
+  //Чек-бокс
+  const checkbox = document.createElement('input');
+  checkbox.type = 'checkbox';
+  checkbox.checked = task.completed;
+  checkbox.classList.add('checkbox');
+
+  //eventListener для отслеживания состояния checkbox
+  checkbox.addEventListener('change', checkboxHandler(task.id));
+
+  //Наименование задачи
+  const titleElement = document.createElement('p');
+  titleElement.textContent = task.title;
+
+  //Кнопка удаления
+  const deleteButton = document.createElement('button');
+  deleteButton.type = 'button';
+  deleteButton.classList.add('delete-button');
+
+  //eventListener для удаления задачи
+  deleteButton.addEventListener('click', deleteTaskHandler(task.id, HTMLElement));
+
+  HTMLElement.append(checkbox, titleElement, deleteButton);
+
+  return HTMLElement;
+};
+
 //Функция для обновления списка задач на странице
 const renderList = () => {
   const fragment = document.createDocumentFragment();
 
   tasksList.forEach(task => {
-    //Общий контейнер задачи
-    const taskElement = document.createElement('div');
-    taskElement.classList.add('task');
-    taskElement.dataset.id = task.id;
-
-    //Чек-бокс
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.checked = task.completed;
-    checkbox.classList.add('checkbox');
-
-    //eventListener для отслеживания состояния checkbox
-    checkbox.addEventListener('change', checkboxHandler(task.id));
-
-    //Наименование задачи
-    const titleElement = document.createElement('p');
-    titleElement.textContent = task.title;
-
-    //Кнопка удаления
-    const deleteButton = document.createElement('button');
-    deleteButton.type = 'button';
-    deleteButton.classList.add('delete-button');
-
-    //eventListener для удаления задачи
-    deleteButton.addEventListener('click', deleteTaskHandler(task.id, taskElement));
-
-    taskElement.append(checkbox, titleElement, deleteButton);
-
+    const taskElement = renderTask(task);
     fragment.append(taskElement);
   });
 
