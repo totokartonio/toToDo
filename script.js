@@ -2,7 +2,16 @@
 
 let taskForm = document.getElementById('task-form');
 let listOfTasks = document.getElementById('task-list');
+let filterContent = document.getElementById('filter-content');
 let tasksList = [];
+
+const statusFilter = {
+  all: 'all',
+  completed: 'completed',
+  active: 'active',
+};
+
+let filter = statusFilter.all;
 
 //Хендлер для добавления id
 const createIncrementingIdGetter = () => {
@@ -65,11 +74,27 @@ const renderTask = task => {
   return taskElement;
 };
 
+//Функция сопоставления фильтра и задачи
+const filterByStatus = task => {
+  if (filter === statusFilter.all) {
+    return true;
+  }
+  if (filter === statusFilter.completed && task.completed) {
+    return true;
+  }
+  if (filter === statusFilter.active && !task.completed) {
+    return true;
+  }
+  return false;
+};
+
 //Функция для обновления списка задач на странице
 const renderList = () => {
   const fragment = document.createDocumentFragment();
 
-  tasksList.forEach(task => {
+  //Добавить только задачи, удовлетворяющие фильтру
+  tasksList.filter(filterByStatus).forEach(task => {
+    //Добавить задачи в DOM
     const taskElement = renderTask(task);
     fragment.append(taskElement);
   });
@@ -106,4 +131,10 @@ taskForm.addEventListener('submit', function (event) {
 
   //Отобразить список задач в консоли
   console.log(tasksList);
+});
+
+//Отфильтровать задачи
+filterContent.addEventListener('change', function (event) {
+  filter = event.target.value;
+  renderList();
 });
