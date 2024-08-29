@@ -25,17 +25,17 @@ const checkboxHandler = taskId => event => {
 };
 
 //Функция для удаления задачи
-const deleteTaskHandler = (taskId, taskElement) => () => {
-  taskElement.remove();
+const deleteTaskHandler = taskId => () => {
   tasksList = tasksList.filter(task => task.id !== taskId);
+  renderList();
 
   console.log(tasksList);
 };
 
-//Функция для добавления задачи на страницу
+//Функция для создания задачи
 const renderTask = task => {
   //Общий контейнер задачи
-  const taskElement = document.createElement('div');
+  let taskElement = document.createElement('div');
   taskElement.classList.add('task');
   taskElement.dataset.id = task.id;
 
@@ -62,7 +62,19 @@ const renderTask = task => {
 
   taskElement.append(checkbox, titleElement, deleteButton);
 
-  listOfTasks.append(taskElement);
+  return taskElement;
+};
+
+//Функция для обновления списка задач на странице
+const renderList = () => {
+  const fragment = document.createDocumentFragment();
+
+  tasksList.forEach(task => {
+    const taskElement = renderTask(task);
+    fragment.append(taskElement);
+  });
+
+  listOfTasks.replaceChildren(fragment);
 };
 
 taskForm.addEventListener('submit', function (event) {
@@ -77,7 +89,7 @@ taskForm.addEventListener('submit', function (event) {
   //Путем итерации записать данные в виде объекта с парами (ключ: значение,)
   const data = Object.fromEntries(formData.entries());
 
-  //Добавить новую задачу в ссписок задач
+  //Добавить новую задачу в массив задач
   let newTask = {
     id: getTaskId(),
     completed: false,
@@ -89,8 +101,8 @@ taskForm.addEventListener('submit', function (event) {
   //Обнулить значение в графе ввода
   form.reset();
 
-  //Отобразить задачу на странице
-  renderTask(newTask);
+  //Отобразить список на странице
+  renderList();
 
   //Отобразить список задач в консоли
   console.log(tasksList);

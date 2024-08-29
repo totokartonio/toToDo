@@ -101,7 +101,7 @@ body {
 }
 
 .delete-button {
-  background: padding-box transparent url(image/bin.svg) no-repeat center center;
+  background: padding-box transparent url(../images/bin.svg) no-repeat center center;
   border: 1px solid black;
   width: 30px;
   height: 30px;
