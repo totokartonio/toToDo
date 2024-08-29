@@ -4,7 +4,14 @@ let taskForm = document.getElementById('task-form');
 let listOfTasks = document.getElementById('task-list');
 let filterContent = document.getElementById('filter-content');
 let tasksList = [];
-let filter = '';
+
+const statusFilter = {
+  all: 'all',
+  completed: 'completed',
+  incompleted: 'incompleted',
+};
+
+let filter = statusFilter.all;
 
 //Хендлер для добавления id
 const createIncrementingIdGetter = () => {
@@ -68,13 +75,15 @@ const renderTask = task => {
 };
 
 //Функция сопоставления фильтра и задачи
-const checkFilter = (task, filter) => {
-  if (filter === '') {
-    task.hidden = false;
-  } else if (String(task.completed) === filter) {
-    task.hidden = false;
+const checkFilter = task => {
+  if (filter === statusFilter.all) {
+    return true;
+  } else if (filter === statusFilter.completed && task.completed === true) {
+    return true;
+  } else if (filter === statusFilter.incompleted && task.completed === false) {
+    return true;
   } else {
-    task.hidden = true;
+    return false;
   }
 };
 
@@ -82,14 +91,12 @@ const checkFilter = (task, filter) => {
 const renderList = () => {
   const fragment = document.createDocumentFragment();
 
-  tasksList.forEach(task => {
+  //Добавить только задачи, удовлетворяющие фильтру
+  tasksList.filter(checkFilter).forEach(task => {
     checkFilter(task, filter);
 
-    //Отобразить только отфильтрованные задачи
-    if (!task.hidden) {
-      const taskElement = renderTask(task);
-      fragment.append(taskElement);
-    }
+    const taskElement = renderTask(task);
+    fragment.append(taskElement);
   });
 
   listOfTasks.replaceChildren(fragment);
@@ -111,7 +118,6 @@ taskForm.addEventListener('submit', function (event) {
   let newTask = {
     id: getTaskId(),
     completed: false,
-    hidden: false,
     ...data,
   };
 
