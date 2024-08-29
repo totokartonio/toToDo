@@ -8,7 +8,7 @@ let tasksList = [];
 const statusFilter = {
   all: 'all',
   completed: 'completed',
-  incompleted: 'incompleted',
+  active: 'active',
 };
 
 let filter = statusFilter.all;
@@ -82,7 +82,7 @@ const filterByStatus = task => {
   if (filter === statusFilter.completed && task.completed) {
     return true;
   }
-  if (filter === statusFilter.incompleted && !task.completed) {
+  if (filter === statusFilter.active && !task.completed) {
     return true;
   }
   return false;
