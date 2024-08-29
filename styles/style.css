@@ -50,6 +50,11 @@ body {
   background-color: #b3b0b0;
 }
 
+#filter-content {
+  max-width: 120px;
+  width: 100%;
+}
+
 .task-list {
   display: flex;
   flex-direction: column;

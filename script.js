@@ -2,7 +2,9 @@
 
 let taskForm = document.getElementById('task-form');
 let listOfTasks = document.getElementById('task-list');
+let filterContent = document.getElementById('filter-content');
 let tasksList = [];
+let filter = '';
 
 //Хендлер для добавления id
 const createIncrementingIdGetter = () => {
@@ -65,13 +67,29 @@ const renderTask = task => {
   return taskElement;
 };
 
+//Функция сопоставления фильтра и задачи
+const checkFilter = (task, filter) => {
+  if (filter === '') {
+    task.hidden = false;
+  } else if (String(task.completed) === filter) {
+    task.hidden = false;
+  } else {
+    task.hidden = true;
+  }
+};
+
 //Функция для обновления списка задач на странице
 const renderList = () => {
   const fragment = document.createDocumentFragment();
 
   tasksList.forEach(task => {
-    const taskElement = renderTask(task);
-    fragment.append(taskElement);
+    checkFilter(task, filter);
+
+    //Отобразить только отфильтрованные задачи
+    if (!task.hidden) {
+      const taskElement = renderTask(task);
+      fragment.append(taskElement);
+    }
   });
 
   listOfTasks.replaceChildren(fragment);
@@ -93,6 +111,7 @@ taskForm.addEventListener('submit', function (event) {
   let newTask = {
     id: getTaskId(),
     completed: false,
+    hidden: false,
     ...data,
   };
 
@@ -106,4 +125,10 @@ taskForm.addEventListener('submit', function (event) {
 
   //Отобразить список задач в консоли
   console.log(tasksList);
+});
+
+//Отфильтровать задачи
+filterContent.addEventListener('change', function (event) {
+  filter = event.target.value;
+  renderList();
 });
