@@ -75,16 +75,17 @@ const renderTask = task => {
 };
 
 //Функция сопоставления фильтра и задачи
-const checkFilter = task => {
+const filterByStatus = task => {
   if (filter === statusFilter.all) {
     return true;
-  } else if (filter === statusFilter.completed && task.completed === true) {
-    return true;
-  } else if (filter === statusFilter.incompleted && task.completed === false) {
-    return true;
-  } else {
-    return false;
   }
+  if (filter === statusFilter.completed && task.completed) {
+    return true;
+  }
+  if (filter === statusFilter.incompleted && !task.completed) {
+    return true;
+  }
+  return false;
 };
 
 //Функция для обновления списка задач на странице
@@ -92,9 +93,8 @@ const renderList = () => {
   const fragment = document.createDocumentFragment();
 
   //Добавить только задачи, удовлетворяющие фильтру
-  tasksList.filter(checkFilter).forEach(task => {
-    checkFilter(task, filter);
-
+  tasksList.filter(filterByStatus).forEach(task => {
+    //Добавить задачи в DOM
     const taskElement = renderTask(task);
     fragment.append(taskElement);
   });
