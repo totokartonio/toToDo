@@ -4,6 +4,7 @@ let taskForm = document.getElementById('task-form');
 let listOfTasks = document.getElementById('task-list');
 let filterContent = document.getElementById('filter-content');
 let clearCompletedButton = document.getElementById('clear-completed');
+let counter = document.getElementById('counter');
 let tasksList = [];
 
 const statusFilter = {
@@ -24,6 +25,22 @@ const createIncrementingIdGetter = () => {
 
 const getTaskId = createIncrementingIdGetter();
 
+//Функция для подсчета значений в массиве согласно фильтру
+const countElementsInArray = (arr, filterKey) => {
+  let i = 0;
+  arr
+    .filter(el => !el[filterKey])
+    .forEach(() => {
+      i++;
+    });
+  return i;
+};
+
+//Функция для обновления значений counter невыполненных задач
+const counterUpdate = () => {
+  counter.textContent = countElementsInArray(tasksList, 'completed');
+};
+
 //Функция для отслеживания изменение состояние чекбоксов
 const checkboxHandler = taskId => event => {
   let checkbox = event.currentTarget;
@@ -31,6 +48,9 @@ const checkboxHandler = taskId => event => {
   tasksList = tasksList.map(task =>
     task.id === taskId ? { ...task, completed: checkbox.checked } : task,
   );
+
+  counterUpdate();
+
   console.log(tasksList);
 };
 
@@ -101,6 +121,8 @@ const renderList = () => {
   });
 
   listOfTasks.replaceChildren(fragment);
+
+  counterUpdate();
 };
 
 //Функция для очистки масссива по заданому фильтру
