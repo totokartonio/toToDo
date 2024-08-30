@@ -16,11 +16,14 @@
           <button type="submit">Add Task</button>
         </div>
       </form>
-      <select name="filter" id="filter-content">
-        <option value="all">All</option>
-        <option value="completed">Completed</option>
-        <option value="active">Active</option>
-      </select>
+      <div class="utilities">
+        <select name="filter" id="filter-content">
+          <option value="all">All</option>
+          <option value="completed">Completed</option>
+          <option value="active">Active</option>
+        </select>
+        <button type="button" id="clear-completed">Clear all completed</button>
+      </div>
       <div class="task-list" id="task-list"></div>
     </div>
   </body>
