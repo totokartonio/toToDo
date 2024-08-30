@@ -104,8 +104,8 @@ const renderList = () => {
 };
 
 //Функция для очистки масссива по заданому фильтру
-const clearArray = (arr, filterKey) => {
-  return arr.filter(el => !el[filterKey]);
+const clearActive = () => {
+  return (tasksList = tasksList.filter(task => !task.completed));
 };
 
 taskForm.addEventListener('submit', function (event) {
@@ -147,6 +147,6 @@ filterContent.addEventListener('change', function (event) {
 
 //Очистить от выполненых задач
 clearCompletedButton.addEventListener('click', () => {
-  tasksList = clearArray(tasksList, 'completed');
+  clearActive();
   renderList();
 });
