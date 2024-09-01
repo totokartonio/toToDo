@@ -129,11 +129,6 @@ const clearCompleted = arr => {
   return arr.filter(task => !task.completed);
 };
 
-//Функция для очистки масссива по заданому фильтру
-const clearCompleted = arr => {
-  return arr.filter(task => !task.completed);
-};
-
 taskForm.addEventListener('submit', function (event) {
   //Отменить стандарное действие кнопки и избежать обновления страницы
   event.preventDefault();
