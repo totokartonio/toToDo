@@ -3,6 +3,7 @@
 let taskForm = document.getElementById('task-form');
 let listOfTasks = document.getElementById('task-list');
 let filterContent = document.getElementById('filter-content');
+let clearCompletedButton = document.getElementById('clear-completed');
 let tasksList = [];
 
 const statusFilter = {
@@ -102,6 +103,11 @@ const renderList = () => {
   listOfTasks.replaceChildren(fragment);
 };
 
+//Функция для очистки масссива по заданому фильтру
+const clearCompleted = arr => {
+  return arr.filter(task => !task.completed);
+};
+
 taskForm.addEventListener('submit', function (event) {
   //Отменить стандарное действие кнопки и избежать обновления страницы
   event.preventDefault();
@@ -136,5 +142,11 @@ taskForm.addEventListener('submit', function (event) {
 //Отфильтровать задачи
 filterContent.addEventListener('change', function (event) {
   filter = event.target.value;
+  renderList();
+});
+
+//Очистить от выполненых задач
+clearCompletedButton.addEventListener('click', () => {
+  tasksList = clearCompleted(tasksList);
   renderList();
 });

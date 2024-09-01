@@ -50,6 +50,11 @@ body {
   background-color: #b3b0b0;
 }
 
+.utilities {
+  display: flex;
+  gap: 20px;
+}
+
 #filter-content {
   max-width: 120px;
   width: 100%;
