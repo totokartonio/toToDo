@@ -26,19 +26,32 @@ const createIncrementingIdGetter = () => {
 const getTaskId = createIncrementingIdGetter();
 
 //Функция для подсчета значений в массиве согласно фильтру
-const countElementsInArray = (arr, filterKey) => {
-  let i = 0;
-  arr
-    .filter(el => !el[filterKey])
-    .forEach(() => {
-      i++;
-    });
-  return i;
+const countCompleted = arr => {
+  let count = arr.filter(el => !el.completed).length;
+  return count;
+};
+
+//Функция для подсчета значений в массиве согласно фильтру с использованием reduce
+const countCompletedReduce = arr => {
+  return arr.reduce((count, el) => {
+    return !el.completed ? count + 1 : count;
+  }, 0);
 };
 
 //Функция для обновления значений counter невыполненных задач
-const counterUpdate = () => {
-  counter.textContent = countElementsInArray(tasksList, 'completed');
+const renderCounter = () => {
+  let activeTasksNumber = countCompleted(tasksList);
+
+  //Плюрализация строки оставшихся задач
+  let counterText = document.getElementById('counter-text');
+
+  if (activeTasksNumber == 1) {
+    counterText.textContent = ' item left!';
+  } else {
+    counterText.textContent = ' items left!';
+  }
+
+  counter.textContent = activeTasksNumber;
 };
 
 //Функция для отслеживания изменение состояние чекбоксов
@@ -50,13 +63,13 @@ const checkboxHandler = taskId => event => {
   );
   console.log(tasksList);
 
-  counterUpdate();
+  render(['counter']);
 };
 
 //Функция для удаления задачи
 const deleteTaskHandler = taskId => () => {
   tasksList = tasksList.filter(task => task.id !== taskId);
-  renderList();
+  render(['list', 'counter']);
 
   console.log(tasksList);
 };
@@ -120,8 +133,20 @@ const renderList = () => {
   });
 
   listOfTasks.replaceChildren(fragment);
+};
 
-  counterUpdate();
+//Мапа всех рендерящих функций
+const renderFunctionsMap = {
+  list: renderList,
+  counter: renderCounter,
+};
+
+//Выбор функция рендера выбранной области
+const render = (areas = ['list', 'counter']) => {
+  areas.forEach(area => {
+    const render = renderFunctionsMap[area];
+    render();
+  });
 };
 
 //Функция для очистки масссива по заданому фильтру
@@ -154,7 +179,7 @@ taskForm.addEventListener('submit', function (event) {
   form.reset();
 
   //Отобразить список на странице
-  renderList();
+  render(['list', 'counter']);
 
   //Отобразить список задач в консоли
   console.log(tasksList);
@@ -163,11 +188,11 @@ taskForm.addEventListener('submit', function (event) {
 //Отфильтровать задачи
 filterContent.addEventListener('change', function (event) {
   filter = event.target.value;
-  renderList();
+  render(['list']);
 });
 
 //Очистить от выполненых задач
 clearCompletedButton.addEventListener('click', () => {
   tasksList = clearCompleted(tasksList);
-  renderList();
+  render(['list']);
 });
