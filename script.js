@@ -4,7 +4,6 @@ let taskForm = document.getElementById('task-form');
 let listOfTasks = document.getElementById('task-list');
 let filterContent = document.getElementById('filter-content');
 let clearCompletedButton = document.getElementById('clear-completed');
-let counter = document.getElementById('counter');
 let tasksList = [];
 
 const statusFilter = {
@@ -25,14 +24,8 @@ const createIncrementingIdGetter = () => {
 
 const getTaskId = createIncrementingIdGetter();
 
-//Функция для подсчета значений в массиве согласно фильтру
-const countCompleted = arr => {
-  let count = arr.filter(el => !el.completed).length;
-  return count;
-};
-
 //Функция для подсчета значений в массиве согласно фильтру с использованием reduce
-const countCompletedReduce = arr => {
+const countActive = arr => {
   return arr.reduce((count, el) => {
     return !el.completed ? count + 1 : count;
   }, 0);
@@ -40,18 +33,15 @@ const countCompletedReduce = arr => {
 
 //Функция для обновления значений counter невыполненных задач
 const renderCounter = () => {
-  let activeTasksNumber = countCompleted(tasksList);
+  let activeTasksNumber = countActive(tasksList);
 
-  //Плюрализация строки оставшихся задач
-  let counterText = document.getElementById('counter-text');
+  let counter = document.getElementById('counter');
 
   if (activeTasksNumber == 1) {
-    counterText.textContent = ' item left!';
+    counter.textContent = `${activeTasksNumber} item left!`;
   } else {
-    counterText.textContent = ' items left!';
+    counter.textContent = `${activeTasksNumber} items left!`;
   }
-
-  counter.textContent = activeTasksNumber;
 };
 
 //Функция для отслеживания изменение состояние чекбоксов
@@ -69,7 +59,7 @@ const checkboxHandler = taskId => event => {
 //Функция для удаления задачи
 const deleteTaskHandler = taskId => () => {
   tasksList = tasksList.filter(task => task.id !== taskId);
-  render(['list', 'counter']);
+  render();
 
   console.log(tasksList);
 };
@@ -144,8 +134,8 @@ const renderFunctionsMap = {
 //Выбор функция рендера выбранной области
 const render = (areas = ['list', 'counter']) => {
   areas.forEach(area => {
-    const render = renderFunctionsMap[area];
-    render();
+    const renderArea = renderFunctionsMap[area];
+    renderArea();
   });
 };
 
@@ -179,7 +169,7 @@ taskForm.addEventListener('submit', function (event) {
   form.reset();
 
   //Отобразить список на странице
-  render(['list', 'counter']);
+  render();
 
   //Отобразить список задач в консоли
   console.log(tasksList);
