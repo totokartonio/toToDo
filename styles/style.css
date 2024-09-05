@@ -57,7 +57,7 @@ body {
   justify-content: center;
 }
 
-.task-list:empty + .utilities {
+.hidden {
   display: none;
 }
 
