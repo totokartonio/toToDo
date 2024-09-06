@@ -131,23 +131,19 @@ const renderList = () => {
   listOfTasks.replaceChildren(fragment);
 };
 
-const renderListClass = () => {
-  if (count.active(tasksList) > 0 || count.completed(tasksList) > 0) {
-    utilities.classList.remove('hidden');
-  } else {
-    utilities.classList.add('hidden');
-  }
+const renderUtilities = () => {
+  utilities.classList.toggle('hidden', tasksList.length === 0);
 };
 
 //Мапа всех рендерящих функций
 const renderFunctionsMap = {
   list: renderList,
   counter: renderCounter,
-  class: renderListClass,
+  utilities: renderUtilities,
 };
 
 //Выбор функция рендера выбранной области
-const render = (areas = ['list', 'counter', 'class']) => {
+const render = (areas = ['list', 'counter', 'utilities']) => {
   areas.forEach(area => {
     const renderArea = renderFunctionsMap[area];
     renderArea();
