@@ -53,6 +53,12 @@ body {
 .utilities {
   display: flex;
   gap: 20px;
+  align-items: center;
+  justify-content: center;
+}
+
+.hidden {
+  display: none;
 }
 
 #filter-content {

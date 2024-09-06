@@ -4,6 +4,8 @@ let taskForm = document.getElementById('task-form');
 let listOfTasks = document.getElementById('task-list');
 let filterContent = document.getElementById('filter-content');
 let clearCompletedButton = document.getElementById('clear-completed');
+let counter = document.getElementById('counter');
+let utilities = document.getElementById('utilities');
 let tasksList = [];
 
 const statusFilter = {
@@ -24,6 +26,30 @@ const createIncrementingIdGetter = () => {
 
 const getTaskId = createIncrementingIdGetter();
 
+//Функции счетчики
+const count = {
+  //Функция для подсчета активных задач
+  active: arr => {
+    return arr.reduce((count, el) => {
+      return !el.completed ? count + 1 : count;
+    }, 0);
+  },
+
+  //Функция для подсчета выполненных задач
+  completed: arr => {
+    return arr.reduce((count, el) => {
+      return el.completed ? count + 1 : count;
+    }, 0);
+  },
+};
+
+//Функция для обновления значений counter невыполненных задач
+const renderCounter = () => {
+  let activeTasksNumber = count.active(tasksList);
+
+  counter.textContent = `${activeTasksNumber} ${activeTasksNumber === 1 ? 'item' : 'items'} left!`;
+};
+
 //Функция для отслеживания изменение состояние чекбоксов
 const checkboxHandler = taskId => event => {
   let checkbox = event.currentTarget;
@@ -32,12 +58,14 @@ const checkboxHandler = taskId => event => {
     task.id === taskId ? { ...task, completed: checkbox.checked } : task,
   );
   console.log(tasksList);
+
+  render(['counter']);
 };
 
 //Функция для удаления задачи
 const deleteTaskHandler = taskId => () => {
   tasksList = tasksList.filter(task => task.id !== taskId);
-  renderList();
+  render();
 
   console.log(tasksList);
 };
@@ -103,6 +131,25 @@ const renderList = () => {
   listOfTasks.replaceChildren(fragment);
 };
 
+const renderUtilities = () => {
+  utilities.classList.toggle('hidden', tasksList.length === 0);
+};
+
+//Мапа всех рендерящих функций
+const renderFunctionsMap = {
+  list: renderList,
+  counter: renderCounter,
+  utilities: renderUtilities,
+};
+
+//Выбор функция рендера выбранной области
+const render = (areas = ['list', 'counter', 'utilities']) => {
+  areas.forEach(area => {
+    const renderArea = renderFunctionsMap[area];
+    renderArea();
+  });
+};
+
 //Функция для очистки масссива по заданому фильтру
 const clearCompleted = arr => {
   return arr.filter(task => !task.completed);
@@ -133,7 +180,7 @@ taskForm.addEventListener('submit', function (event) {
   form.reset();
 
   //Отобразить список на странице
-  renderList();
+  render();
 
   //Отобразить список задач в консоли
   console.log(tasksList);
@@ -142,11 +189,11 @@ taskForm.addEventListener('submit', function (event) {
 //Отфильтровать задачи
 filterContent.addEventListener('change', function (event) {
   filter = event.target.value;
-  renderList();
+  render(['list']);
 });
 
 //Очистить от выполненых задач
 clearCompletedButton.addEventListener('click', () => {
   tasksList = clearCompleted(tasksList);
-  renderList();
+  render();
 });
