@@ -1,5 +1,5 @@
 'use strict';
-const NODES = {
+const nodes = {
   form: document.getElementById('task-form'),
   list: document.getElementById('task-list'),
   filter: document.getElementById('filter-content'),
@@ -8,16 +8,16 @@ const NODES = {
   utilities: document.getElementById('utilities'),
 };
 
-const STORE = {
-  list: new Map(),
-  filter: {
-    all: 'all',
-    completed: 'completed',
-    active: 'active',
-  },
+const FILTER = {
+  ALL: 'all',
+  COMPLETED: 'completed',
+  ACTIVE: 'active',
 };
 
-let selectedFilter = STORE.filter.all;
+const store = {
+  list: new Map(),
+  filterStatus: FILTER.ALL,
+};
 
 //Хендлер для добавления id
 const createIncrementingIdGetter = () => {
@@ -48,9 +48,9 @@ const count = {
 
 //Функция для обновления значений counter невыполненных задач
 const renderCounter = () => {
-  let activeTasksNumber = count.active(STORE.list);
+  let activeTasksNumber = count.active(store.list);
 
-  NODES.counter.textContent = `${activeTasksNumber} ${
+  nodes.counter.textContent = `${activeTasksNumber} ${
     activeTasksNumber === 1 ? 'item' : 'items'
   } left!`;
 };
@@ -59,32 +59,32 @@ const renderCounter = () => {
 const checkboxHandler = taskId => event => {
   let checkbox = event.currentTarget;
 
-  let taskToUpdate = STORE.list.get(taskId);
+  let taskToUpdate = store.list.get(taskId);
 
   taskToUpdate.completed = checkbox.checked;
 
-  console.log(STORE.list);
+  console.log(store.list);
 
   render(['counter']);
 };
 
 //Функция для удаления задачи
 const deleteTaskHandler = taskId => () => {
-  STORE.list.delete(taskId);
+  store.list.delete(taskId);
   render();
 
-  console.log(STORE.list);
+  console.log(store.list);
 };
 
 //Функция для создания задачи
 const renderTask = (taskID, task) => {
   //Общий контейнер задачи
-  let taskElement = document.createElement('div');
+  const taskElement = document.createElement('div');
   taskElement.classList.add('task');
   taskElement.dataset.id = taskID;
 
   //Чек-бокс
-  let checkbox = document.createElement('input');
+  const checkbox = document.createElement('input');
   checkbox.type = 'checkbox';
   checkbox.name = 'task-checkbox';
   checkbox.checked = task.completed;
@@ -94,11 +94,11 @@ const renderTask = (taskID, task) => {
   checkbox.addEventListener('change', checkboxHandler(taskID));
 
   //Наименование задачи
-  let titleElement = document.createElement('p');
+  const titleElement = document.createElement('p');
   titleElement.textContent = task.title;
 
   //Кнопка удаления
-  let deleteButton = document.createElement('button');
+  const deleteButton = document.createElement('button');
   deleteButton.type = 'button';
   deleteButton.classList.add('delete-button');
 
@@ -112,13 +112,13 @@ const renderTask = (taskID, task) => {
 
 //Функция сопоставления фильтра и задачи
 const filterByStatus = task => {
-  if (selectedFilter === STORE.filter.all) {
+  if (store.filterStatus === FILTER.ALL) {
     return true;
   }
-  if (selectedFilter === STORE.filter.completed && task.completed) {
+  if (store.filterStatus === FILTER.COMPLETED && task.completed) {
     return true;
   }
-  if (selectedFilter === STORE.filter.active && !task.completed) {
+  if (store.filterStatus === FILTER.ACTIVE && !task.completed) {
     return true;
   }
   return false;
@@ -129,7 +129,7 @@ const renderList = () => {
   let fragment = document.createDocumentFragment();
 
   //Добавить только задачи, удовлетворяющие фильтру
-  Array.from(STORE.list.entries())
+  Array.from(store.list.entries())
     .filter(([, task]) => filterByStatus(task)) // Apply filter function
     .forEach(([id, task]) => {
       //Добавить задачи в DOM
@@ -137,11 +137,11 @@ const renderList = () => {
       fragment.append(taskElement);
     });
 
-  NODES.list.replaceChildren(fragment);
+  nodes.list.replaceChildren(fragment);
 };
 
 const renderUtilities = () => {
-  NODES.utilities.classList.toggle('hidden', STORE.list.size === 0);
+  nodes.utilities.classList.toggle('hidden', store.list.size === 0);
 };
 
 //Мапа всех рендерящих функций
@@ -171,7 +171,7 @@ const clearCompleted = map => {
   return map;
 };
 
-NODES.form.addEventListener('submit', function (event) {
+nodes.form.addEventListener('submit', function (event) {
   //Отменить стандарное действие кнопки и избежать обновления страницы
   event.preventDefault();
 
@@ -189,7 +189,7 @@ NODES.form.addEventListener('submit', function (event) {
     ...DATA,
   };
 
-  STORE.list.set(getTaskId(), newTask);
+  store.list.set(getTaskId(), newTask);
 
   //Обнулить значение в графе ввода
   FORM.reset();
@@ -198,17 +198,17 @@ NODES.form.addEventListener('submit', function (event) {
   render();
 
   //Отобразить список задач в консоли
-  console.log(STORE.list);
+  console.log(store.list);
 });
 
 //Отфильтровать задачи
-NODES.filter.addEventListener('change', function (event) {
-  selectedFilter = event.target.value;
+nodes.filter.addEventListener('change', function (event) {
+  store.filterStatus = event.target.value;
   render(['list']);
 });
 
 //Очистить от выполненых задач
-NODES.clearButton.addEventListener('click', () => {
-  STORE.list = clearCompleted(STORE.list);
+nodes.clearButton.addEventListener('click', () => {
+  store.list = clearCompleted(store.list);
   render();
 });
