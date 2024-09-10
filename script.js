@@ -71,7 +71,7 @@ const checkboxHandler = taskId => event => {
 //Функция для удаления задачи
 const deleteTaskHandler = taskId => () => {
   store.list.delete(taskId);
-  render(['list', 'counter', 'utilities']);
+  render();
 
   console.log(store.list);
 };
@@ -202,13 +202,11 @@ nodes.form.addEventListener('submit', function (event) {
   //Обнулить значение в графе ввода
   form.reset();
 
-  document.dispatchEvent(new Event('task:added'));
-
-  //Отобразить список на странице
-  render(['list', 'counter', 'utilities']);
-
   //Отобразить список задач в консоли
   console.log(store.list);
+
+  //Активировать событие добавления задачи
+  document.dispatchEvent(new Event('task:added'));
 });
 
 //Отфильтровать задачи
@@ -220,11 +218,13 @@ nodes.filter.addEventListener('change', function (event) {
 //Очистить от выполненых задач
 nodes.clearButton.addEventListener('click', () => {
   clearCompleted(store.list);
-  render(['list', 'counter', 'utilities']);
+  render();
 });
 
 document.addEventListener('task:added', () => {
   //Сбросить фильтр
   filterReset();
-  render(['statusFilter']);
+
+  //Отобразить список на странице
+  render();
 });
