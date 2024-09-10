@@ -48,7 +48,7 @@ const countTasksByStatus = {
 
 //Функция для обновления значений counter невыполненных задач
 const renderCounter = () => {
-  let activeTasksNumber = countTasksByStatus.active(store.list);
+  const activeTasksNumber = countTasksByStatus.active(store.list);
 
   nodes.counter.textContent = `${activeTasksNumber} ${
     activeTasksNumber === 1 ? 'item' : 'items'
@@ -56,10 +56,10 @@ const renderCounter = () => {
 };
 
 //Функция для отслеживания изменение состояние чекбоксов
-const checkboxHandler = taskID => event => {
+const checkboxHandler = taskId => event => {
   let checkbox = event.currentTarget;
 
-  let taskToUpdate = store.list.get(taskID);
+  let taskToUpdate = store.list.get(taskId);
 
   taskToUpdate.completed = checkbox.checked;
 
@@ -163,10 +163,7 @@ const render = (areas = ['list', 'counter', 'utilities']) => {
 const clearCompleted = tasks => {
   Array.from(tasks.values())
     .filter(task => task.completed)
-    .map(task => task.id)
-    .forEach(id => tasks.delete(id));
-
-  return tasks;
+    .forEach(task => tasks.delete(task.id));
 };
 
 nodes.form.addEventListener('submit', function (event) {
@@ -181,16 +178,16 @@ nodes.form.addEventListener('submit', function (event) {
   //Путем итерации записать данные в виде объекта с парами (ключ: значение,)
   const data = Object.fromEntries(formData.entries());
 
-  let taskID = getTaskId();
+  const taskId = getTaskId();
 
   //Добавить новую задачу в массив задач
   let newTask = {
-    id: taskID,
+    id: taskId,
     completed: false,
     ...data,
   };
 
-  store.list.set(taskID, newTask);
+  store.list.set(taskId, newTask);
 
   //Обнулить значение в графе ввода
   form.reset();
@@ -210,6 +207,6 @@ nodes.filter.addEventListener('change', function (event) {
 
 //Очистить от выполненых задач
 nodes.clearButton.addEventListener('click', () => {
-  store.list = clearCompleted(store.list);
+  clearCompleted(store.list);
   render();
 });
