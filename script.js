@@ -166,6 +166,12 @@ const clearCompleted = tasks => {
     .forEach(task => tasks.delete(task.id));
 };
 
+//Функция для сброса фильтра на значение 'All'
+const filterReset = () => {
+  nodes.filter.value = STATUS_FILTER_OPTIONS.all;
+  store.filterStatus = STATUS_FILTER_OPTIONS.all;
+};
+
 nodes.form.addEventListener('submit', function (event) {
   //Отменить стандарное действие кнопки и избежать обновления страницы
   event.preventDefault();
@@ -191,6 +197,9 @@ nodes.form.addEventListener('submit', function (event) {
 
   //Обнулить значение в графе ввода
   form.reset();
+
+  //Сбросить фильтр
+  filterReset();
 
   //Отобразить список на странице
   render();
