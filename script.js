@@ -71,7 +71,7 @@ const checkboxHandler = taskId => event => {
 //Функция для удаления задачи
 const deleteTaskHandler = taskId => () => {
   store.list.delete(taskId);
-  render();
+  render(['list', 'counter', 'utilities']);
 
   console.log(store.list);
 };
@@ -144,15 +144,20 @@ const renderUtilities = () => {
   nodes.utilities.classList.toggle('hidden', store.list.size === 0);
 };
 
+const renderStatusFilter = () => {
+  nodes.filter.value = store.filterStatus;
+};
+
 //Мапа всех рендерящих функций
 const renderFunctionsMap = {
   list: renderList,
   counter: renderCounter,
   utilities: renderUtilities,
+  statusFilter: renderStatusFilter,
 };
 
 //Выбор функция рендера выбранной области
-const render = (areas = ['list', 'counter', 'utilities']) => {
+const render = (areas = ['list', 'counter', 'utilities', 'statusFilter']) => {
   areas.forEach(area => {
     const renderArea = renderFunctionsMap[area];
     renderArea();
@@ -168,7 +173,6 @@ const clearCompleted = tasks => {
 
 //Функция для сброса фильтра на значение 'All'
 const filterReset = () => {
-  nodes.filter.value = STATUS_FILTER_OPTIONS.all;
   store.filterStatus = STATUS_FILTER_OPTIONS.all;
 };
 
@@ -198,11 +202,10 @@ nodes.form.addEventListener('submit', function (event) {
   //Обнулить значение в графе ввода
   form.reset();
 
-  //Сбросить фильтр
-  filterReset();
+  document.dispatchEvent(new Event('task:added'));
 
   //Отобразить список на странице
-  render();
+  render(['list', 'counter', 'utilities']);
 
   //Отобразить список задач в консоли
   console.log(store.list);
@@ -217,5 +220,11 @@ nodes.filter.addEventListener('change', function (event) {
 //Очистить от выполненых задач
 nodes.clearButton.addEventListener('click', () => {
   clearCompleted(store.list);
-  render();
+  render(['list', 'counter', 'utilities']);
+});
+
+document.addEventListener('task:added', () => {
+  //Сбросить фильтр
+  filterReset();
+  render(['statusFilter']);
 });
