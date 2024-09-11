@@ -202,6 +202,8 @@ nodes.form.addEventListener('submit', function (event) {
   //Обнулить значение в графе ввода
   form.reset();
 
+  render();
+
   //Отобразить список задач в консоли
   console.log(store.list);
 
@@ -222,6 +224,9 @@ nodes.clearButton.addEventListener('click', () => {
 });
 
 document.addEventListener('task:added', () => {
+  //Проверить фильтр
+  if (nodes.filter.value === 'all') return;
+
   //Сбросить фильтр
   filterReset();
 
