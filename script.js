@@ -225,7 +225,7 @@ nodes.clearButton.addEventListener('click', () => {
 
 document.addEventListener('task:added', () => {
   //Проверить фильтр
-  if (nodes.filter.value === 'all') return;
+  if (store.filterStatus === STATUS_FILTER_OPTIONS.all) return;
 
   //Сбросить фильтр
   filterReset();
