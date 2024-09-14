@@ -76,6 +76,34 @@ const deleteTaskHandler = taskId => () => {
   console.log(store.list);
 };
 
+//Функция для редактирования задачи
+const editTaskHandler = (task, titleElement, confirmButton) => event => {
+  let editButton = event.currentTarget;
+  //Создать поле ввода отредактированной задачи
+  const inputElement = document.createElement('input');
+  inputElement.type = 'text';
+  inputElement.value = task.title;
+  inputElement.classList.add('edit-input');
+
+  //Замена текста задачи на поле ввода, замена кнопки редактирования на кнопку подтверждения изменений
+  titleElement.replaceWith(inputElement);
+  inputElement.focus();
+
+  editButton.classList.toggle('hidden');
+  confirmButton.classList.toggle('hidden');
+
+  //Сохранение введенных значений для дальнейшей передачи в функцию подтверждения изменений
+  task.inputElement = inputElement;
+};
+
+const confirmTaskHandler = task => () => {
+  const inputElement = task.inputElement;
+  task.title = inputElement.value;
+  store.list.set(task.id, task);
+  console.log(store.list);
+  render();
+};
+
 //Функция для создания задачи
 const renderTask = task => {
   //Общий контейнер задачи
@@ -97,6 +125,23 @@ const renderTask = task => {
   const titleElement = document.createElement('p');
   titleElement.textContent = task.title;
 
+  //Кнопка редактирования
+  const editButton = document.createElement('button');
+  editButton.type = 'button';
+  editButton.classList.add('edit-button');
+
+  //Кнопка подтверждения редактирования
+  const confirmButton = document.createElement('button');
+  confirmButton.type = 'button';
+  confirmButton.classList.add('confirm-button');
+  confirmButton.classList.add('hidden');
+
+  //eventListener для редактирования задачи
+  editButton.addEventListener('click', editTaskHandler(task, titleElement, confirmButton));
+
+  //eventListener для редактирования задачи
+  confirmButton.addEventListener('click', confirmTaskHandler(task));
+
   //Кнопка удаления
   const deleteButton = document.createElement('button');
   deleteButton.type = 'button';
@@ -105,7 +150,7 @@ const renderTask = task => {
   //eventListener для удаления задачи
   deleteButton.addEventListener('click', deleteTaskHandler(task.id, taskElement));
 
-  taskElement.append(checkbox, titleElement, deleteButton);
+  taskElement.append(checkbox, titleElement, editButton, confirmButton, deleteButton);
 
   return taskElement;
 };
