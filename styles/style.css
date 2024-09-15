@@ -121,15 +121,6 @@ body {
   background-color: #343434;
 }
 
-.edit-input {
-  border: 1px solid #343434;
-  height: 25px;
-  width: 250px;
-  padding: 0 5px;
-  margin: 0;
-  font-size: 15px;
-}
-
 .edit-button {
   background: padding-box transparent url(../images/edit.svg) no-repeat center center;
   border: 1px solid #343434;
@@ -144,6 +135,23 @@ body {
 
 .edit-button:active {
   background-color: #b3b0b0;
+}
+
+.input-form {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+}
+
+.edit-input {
+  border: 1px solid #343434;
+  height: 25px;
+  width: 250px;
+  padding: 0 5px;
+  margin: 0;
+  font-size: 15px;
 }
 
 .confirm-button {

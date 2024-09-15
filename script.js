@@ -17,6 +17,7 @@ const STATUS_FILTER_OPTIONS = {
 const store = {
   list: new Map(),
   filterStatus: STATUS_FILTER_OPTIONS.all,
+  editingTaskId: 0,
 };
 
 //Хендлер для добавления id
@@ -77,30 +78,18 @@ const deleteTaskHandler = taskId => () => {
 };
 
 //Функция для редактирования задачи
-const editTaskHandler = (task, titleElement, confirmButton) => event => {
-  let editButton = event.currentTarget;
-  //Создать поле ввода отредактированной задачи
-  const inputElement = document.createElement('input');
-  inputElement.type = 'text';
-  inputElement.value = task.title;
-  inputElement.classList.add('edit-input');
-
-  //Замена текста задачи на поле ввода, замена кнопки редактирования на кнопку подтверждения изменений
-  titleElement.replaceWith(inputElement);
-  inputElement.focus();
-
-  editButton.classList.toggle('hidden');
-  confirmButton.classList.toggle('hidden');
-
-  //Сохранение введенных значений для дальнейшей передачи в функцию подтверждения изменений
-  task.inputElement = inputElement;
+const editTaskHandler = task => () => {
+  store.editingTaskId = task.id;
+  render();
 };
 
-const confirmTaskHandler = task => () => {
-  const inputElement = task.inputElement;
-  task.title = inputElement.value;
-  store.list.set(task.id, task);
-  console.log(store.list);
+//Функция для сохранения отредактированной задачи
+const confirmTaskHandler = inputElement => event => {
+  event.preventDefault();
+
+  const editedTask = store.list.get(store.editingTaskId);
+  editedTask.title = inputElement.value;
+  store.editingTaskId = 0;
   render();
 };
 
@@ -130,17 +119,20 @@ const renderTask = task => {
   editButton.type = 'button';
   editButton.classList.add('edit-button');
 
+  //eventListener для редактирования задачи
+  editButton.addEventListener('click', editTaskHandler(task));
+
+  //Создать поле ввода редактирования задачи
+  const inputElement = document.createElement('input');
+  inputElement.type = 'text';
+  inputElement.value = task.title;
+  inputElement.classList.add('edit-input');
+  inputElement.required = true;
+
   //Кнопка подтверждения редактирования
   const confirmButton = document.createElement('button');
   confirmButton.type = 'button';
   confirmButton.classList.add('confirm-button');
-  confirmButton.classList.add('hidden');
-
-  //eventListener для редактирования задачи
-  editButton.addEventListener('click', editTaskHandler(task, titleElement, confirmButton));
-
-  //eventListener для редактирования задачи
-  confirmButton.addEventListener('click', confirmTaskHandler(task));
 
   //Кнопка удаления
   const deleteButton = document.createElement('button');
@@ -150,7 +142,23 @@ const renderTask = task => {
   //eventListener для удаления задачи
   deleteButton.addEventListener('click', deleteTaskHandler(task.id, taskElement));
 
-  taskElement.append(checkbox, titleElement, editButton, confirmButton, deleteButton);
+  const inputForm = document.createElement('form');
+  inputForm.classList.add('input-form');
+  inputForm.append(checkbox, inputElement, confirmButton, deleteButton);
+
+  //срабатывание eventListener для редактирования задачи при submit
+  inputForm.addEventListener('submit', confirmTaskHandler(inputElement));
+  //срабатывание eventListener для редактирования задачи при нажатии на кнопку
+  confirmButton.addEventListener('click', confirmTaskHandler(inputElement));
+
+  const addingTask = () => {
+    taskElement.append(checkbox, titleElement, editButton, deleteButton);
+  };
+  const editingTask = () => {
+    taskElement.append(inputForm);
+  };
+
+  task.id === store.editingTaskId ? editingTask() : addingTask();
 
   return taskElement;
 };
