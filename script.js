@@ -66,7 +66,7 @@ const checkboxHandler = taskId => event => {
 
   console.log(store.list);
 
-  render(['counter']);
+  render(['list', 'counter']);
 };
 
 //Функция для удаления задачи
@@ -118,6 +118,8 @@ const renderTask = task => {
   //eventListener для удаления задачи
   deleteButton.addEventListener('click', deleteTaskHandler(task.id, taskElement));
 
+  let postRenderEffect = undefined;
+
   if (task.id === store.editingTaskId) {
     //Создать поле ввода редактирования задачи
     const inputElement = document.createElement('input');
@@ -125,7 +127,6 @@ const renderTask = task => {
     inputElement.value = task.title;
     inputElement.classList.add('edit-input');
     inputElement.required = true;
-    inputElement.autofocus = true;
 
     //Кнопка подтверждения редактирования
     const confirmButton = document.createElement('button');
@@ -140,6 +141,10 @@ const renderTask = task => {
     inputForm.addEventListener('submit', confirmTaskHandler(inputElement));
 
     taskElement.append(inputForm);
+
+    postRenderEffect = () => {
+      inputElement.focus();
+    };
   } else {
     //Наименование задачи
     const titleElement = document.createElement('p');
@@ -156,7 +161,7 @@ const renderTask = task => {
     taskElement.append(checkbox, titleElement, editButton, deleteButton);
   }
 
-  return taskElement;
+  return { taskElement, postRenderEffect };
 };
 
 //Функция сопоставления фильтра и задачи
@@ -176,17 +181,22 @@ const filterByStatus = task => {
 //Функция для обновления списка задач на странице
 const renderList = () => {
   const fragment = document.createDocumentFragment();
+  const postRenderEffects = [];
 
   //Добавить только задачи, удовлетворяющие фильтру
   Array.from(store.list.values())
     .filter(filterByStatus)
     .forEach(task => {
       //Добавить задачи в DOM
-      const taskElement = renderTask(task);
+      const { taskElement, postRenderEffect } = renderTask(task);
       fragment.append(taskElement);
+      if (postRenderEffect) {
+        postRenderEffects.push(postRenderEffect);
+      }
     });
 
   nodes.list.replaceChildren(fragment);
+  postRenderEffects.forEach(effect => effect());
 };
 
 const renderUtilities = () => {
