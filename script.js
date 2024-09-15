@@ -78,8 +78,8 @@ const deleteTaskHandler = taskId => () => {
 };
 
 //Функция для редактирования задачи
-const editTaskHandler = task => () => {
-  store.editingTaskId = task.id;
+const editTaskHandler = taskId => () => {
+  store.editingTaskId = taskId;
   render();
 };
 
@@ -89,7 +89,7 @@ const confirmTaskHandler = inputElement => event => {
 
   const editedTask = store.list.get(store.editingTaskId);
   editedTask.title = inputElement.value;
-  store.editingTaskId = 0;
+  store.editingTaskId = null;
   render();
 };
 
@@ -125,10 +125,11 @@ const renderTask = task => {
     inputElement.value = task.title;
     inputElement.classList.add('edit-input');
     inputElement.required = true;
+    inputElement.autofocus = true;
 
     //Кнопка подтверждения редактирования
     const confirmButton = document.createElement('button');
-    confirmButton.type = 'button';
+    confirmButton.type = 'submit';
     confirmButton.classList.add('confirm-button');
 
     const inputForm = document.createElement('form');
@@ -137,8 +138,6 @@ const renderTask = task => {
 
     //срабатывание eventListener для редактирования задачи при submit
     inputForm.addEventListener('submit', confirmTaskHandler(inputElement));
-    //срабатывание eventListener для редактирования задачи при нажатии на кнопку
-    confirmButton.addEventListener('click', confirmTaskHandler(inputElement));
 
     taskElement.append(inputForm);
   } else {
@@ -152,7 +151,7 @@ const renderTask = task => {
     editButton.classList.add('edit-button');
 
     //eventListener для редактирования задачи
-    editButton.addEventListener('click', editTaskHandler(task));
+    editButton.addEventListener('click', editTaskHandler(task.id));
 
     taskElement.append(checkbox, titleElement, editButton, deleteButton);
   }
