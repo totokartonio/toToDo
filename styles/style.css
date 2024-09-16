@@ -1,6 +1,7 @@
 body {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 15px;
+  color: #343434;
 }
 
 .content-container {
@@ -25,7 +26,7 @@ body {
 }
 
 .new-task-form input {
-  border: 1px solid black;
+  border: 1px solid #343434;
   height: 25px;
   width: 250px;
   padding: 0 5px;
@@ -35,7 +36,7 @@ body {
 
 .new-task-form button {
   background: none;
-  border: 1px solid black;
+  border: 1px solid #343434;
   height: 27px;
   padding: 0 5px;
   margin: 0;
@@ -76,8 +77,12 @@ body {
   padding: 5px 10px;
   display: flex;
   gap: 10px;
-  border: 1px solid black;
+  border: 1px solid #343434;
   align-items: center;
+}
+
+.task p {
+  word-wrap: break-word;
 }
 
 .task .checkbox {
@@ -108,20 +113,68 @@ body {
   left: 1.5px;
   width: 15px;
   height: 15px;
-  background-color: #36a5ff;
+  background-color: #343434;
   border-radius: 4px;
 }
 
 .task .checkbox:checked:hover::before {
-  background-color: #0088f7;
+  background-color: #343434;
+}
+
+.edit-button {
+  background: padding-box transparent url(../images/edit.svg) no-repeat center center;
+  border: 1px solid #343434;
+  width: 30px;
+  height: 30px;
+  margin-left: auto;
+}
+
+.edit-button:hover {
+  background-color: #e8e8e8;
+}
+
+.edit-button:active {
+  background-color: #b3b0b0;
+}
+
+.input-form {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+}
+
+.edit-input {
+  border: 1px solid #343434;
+  height: 25px;
+  width: 250px;
+  padding: 0 5px;
+  margin: 0;
+  font-size: 15px;
+}
+
+.confirm-button {
+  background: padding-box transparent url(../images/confirm.svg) no-repeat center center;
+  border: 1px solid #343434;
+  width: 30px;
+  height: 30px;
+  margin-left: auto;
+}
+
+.confirm-button:hover {
+  background-color: #e8e8e8;
+}
+
+.confirm-button:active {
+  background-color: #b3b0b0;
 }
 
 .delete-button {
   background: padding-box transparent url(../images/bin.svg) no-repeat center center;
-  border: 1px solid black;
+  border: 1px solid #343434;
   width: 30px;
   height: 30px;
-  margin-left: auto;
 }
 
 .delete-button:hover {

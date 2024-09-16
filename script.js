@@ -17,6 +17,7 @@ const STATUS_FILTER_OPTIONS = {
 const store = {
   list: new Map(),
   filterStatus: STATUS_FILTER_OPTIONS.all,
+  editingTaskId: null,
 };
 
 //Хендлер для добавления id
@@ -65,7 +66,7 @@ const checkboxHandler = taskId => event => {
 
   console.log(store.list);
 
-  render(['counter']);
+  render(['list', 'counter']);
 };
 
 //Функция для удаления задачи
@@ -74,6 +75,22 @@ const deleteTaskHandler = taskId => () => {
   render();
 
   console.log(store.list);
+};
+
+//Функция для редактирования задачи
+const editTaskHandler = taskId => () => {
+  store.editingTaskId = taskId;
+  render();
+};
+
+//Функция для сохранения отредактированной задачи
+const confirmTaskHandler = inputElement => event => {
+  event.preventDefault();
+
+  const editedTask = store.list.get(store.editingTaskId);
+  editedTask.title = inputElement.value;
+  store.editingTaskId = null;
+  render();
 };
 
 //Функция для создания задачи
@@ -93,10 +110,6 @@ const renderTask = task => {
   //eventListener для отслеживания состояния checkbox
   checkbox.addEventListener('change', checkboxHandler(task.id));
 
-  //Наименование задачи
-  const titleElement = document.createElement('p');
-  titleElement.textContent = task.title;
-
   //Кнопка удаления
   const deleteButton = document.createElement('button');
   deleteButton.type = 'button';
@@ -105,9 +118,50 @@ const renderTask = task => {
   //eventListener для удаления задачи
   deleteButton.addEventListener('click', deleteTaskHandler(task.id, taskElement));
 
-  taskElement.append(checkbox, titleElement, deleteButton);
+  let postRenderEffect = undefined;
 
-  return taskElement;
+  if (task.id === store.editingTaskId) {
+    //Создать поле ввода редактирования задачи
+    const inputElement = document.createElement('input');
+    inputElement.type = 'text';
+    inputElement.value = task.title;
+    inputElement.classList.add('edit-input');
+    inputElement.required = true;
+
+    //Кнопка подтверждения редактирования
+    const confirmButton = document.createElement('button');
+    confirmButton.type = 'submit';
+    confirmButton.classList.add('confirm-button');
+
+    const inputForm = document.createElement('form');
+    inputForm.classList.add('input-form');
+    inputForm.append(checkbox, inputElement, confirmButton, deleteButton);
+
+    //срабатывание eventListener для редактирования задачи при submit
+    inputForm.addEventListener('submit', confirmTaskHandler(inputElement));
+
+    taskElement.append(inputForm);
+
+    postRenderEffect = () => {
+      inputElement.focus();
+    };
+  } else {
+    //Наименование задачи
+    const titleElement = document.createElement('p');
+    titleElement.textContent = task.title;
+
+    //Кнопка редактирования
+    const editButton = document.createElement('button');
+    editButton.type = 'button';
+    editButton.classList.add('edit-button');
+
+    //eventListener для редактирования задачи
+    editButton.addEventListener('click', editTaskHandler(task.id));
+
+    taskElement.append(checkbox, titleElement, editButton, deleteButton);
+  }
+
+  return { taskElement, postRenderEffect };
 };
 
 //Функция сопоставления фильтра и задачи
@@ -127,17 +181,22 @@ const filterByStatus = task => {
 //Функция для обновления списка задач на странице
 const renderList = () => {
   const fragment = document.createDocumentFragment();
+  const postRenderEffects = [];
 
   //Добавить только задачи, удовлетворяющие фильтру
   Array.from(store.list.values())
     .filter(filterByStatus)
     .forEach(task => {
       //Добавить задачи в DOM
-      const taskElement = renderTask(task);
+      const { taskElement, postRenderEffect } = renderTask(task);
       fragment.append(taskElement);
+      if (postRenderEffect) {
+        postRenderEffects.push(postRenderEffect);
+      }
     });
 
   nodes.list.replaceChildren(fragment);
+  postRenderEffects.forEach(effect => effect());
 };
 
 const renderUtilities = () => {
