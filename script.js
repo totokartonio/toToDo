@@ -27,6 +27,13 @@ const icons = {
   `,
 };
 
+const colorScheme = window.matchMedia('(prefers-color-scheme: dark)');
+
+const colorModes = {
+  light: 'is-light',
+  dark: 'is-dark',
+};
+
 const STATUS_FILTER_OPTIONS = {
   all: 'all',
   completed: 'completed',
@@ -304,9 +311,15 @@ nodes.clearButton.addEventListener('click', () => {
   render();
 });
 
+colorScheme.addEventListener('change', () => {
+  document.body.setAttribute('class', '');
+});
+
 //Смена темы
 nodes.themeSwitch.addEventListener('click', () => {
-  document.body.classList.toggle('darkmode');
+  colorScheme.matches
+    ? document.body.classList.toggle(colorModes.light)
+    : document.body.classList.toggle(colorModes.dark);
 });
 
 document.addEventListener('task:added', () => {

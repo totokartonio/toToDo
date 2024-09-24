@@ -8,7 +8,19 @@
   --background: var(--clr-light);
 }
 
-.darkmode {
+@media (prefers-color-scheme: dark) {
+  :root {
+    --clr-light: #fcfbfc;
+    --clr-dark: #343434;
+    --clr-hover: #444444;
+    --clr-active: #5f5f5f;
+
+    --foreground: var(--clr-light);
+    --background: var(--clr-dark);
+  }
+}
+
+.is-dark {
   --clr-light: #fcfbfc;
   --clr-dark: #343434;
   --clr-hover: #444444;
@@ -16,6 +28,16 @@
 
   --foreground: var(--clr-light);
   --background: var(--clr-dark);
+}
+
+.is-light {
+  --clr-light: #fcfbfc;
+  --clr-dark: #343434;
+  --clr-hover: #e8e8e8;
+  --clr-active: #b3b0b0;
+
+  --foreground: var(--clr-dark);
+  --background: var(--clr-light);
 }
 
 body {
