@@ -311,8 +311,9 @@ nodes.clearButton.addEventListener('click', () => {
   render();
 });
 
+//Убрать класс цветовой темы при смене цвета системы
 colorScheme.addEventListener('change', () => {
-  document.body.setAttribute('class', '');
+  document.body.classList.remove(...Object.values(colorModes));
 });
 
 //Смена темы
