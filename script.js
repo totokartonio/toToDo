@@ -27,12 +27,14 @@ const icons = {
   `,
 };
 
-const colorScheme = window.matchMedia('(prefers-color-scheme: dark)');
-
-const colorModes = {
+const colorTheme = {
   light: 'is-light',
   dark: 'is-dark',
 };
+
+const defaultColorTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
+  ? colorTheme.dark
+  : colorTheme.light;
 
 const STATUS_FILTER_OPTIONS = {
   all: 'all',
@@ -236,6 +238,11 @@ const renderStatusFilter = () => {
   nodes.filter.value = store.filterStatus;
 };
 
+const renderColorTheme = theme => {
+  document.documentElement.classList.remove(...Object.values(colorTheme));
+  document.documentElement.classList.add(theme);
+};
+
 //Мапа всех рендерящих функций
 const renderFunctionsMap = {
   list: renderList,
@@ -312,15 +319,22 @@ nodes.clearButton.addEventListener('click', () => {
 });
 
 //Убрать класс цветовой темы при смене цвета системы
-colorScheme.addEventListener('change', () => {
-  document.body.classList.remove(...Object.values(colorModes));
-});
+const colorThemeHandler = () => {
+  if (document.documentElement.classList.contains(colorTheme.light)) {
+    return colorTheme.dark;
+  } else {
+    return colorTheme.light;
+  }
+};
+
+// defaultColorTheme.addEventListener('change', () => {
+//   document.documentElement.classList.remove(...Object.values(colorTheme));
+//   renderColorTheme(colorThemeHandler());
+// });
 
 //Смена темы
 nodes.themeSwitch.addEventListener('click', () => {
-  colorScheme.matches
-    ? document.body.classList.toggle(colorModes.light)
-    : document.body.classList.toggle(colorModes.dark);
+  renderColorTheme(colorThemeHandler());
 });
 
 document.addEventListener('task:added', () => {
@@ -333,3 +347,5 @@ document.addEventListener('task:added', () => {
   //Отобразить список на странице
   render();
 });
+
+renderColorTheme(defaultColorTheme);
