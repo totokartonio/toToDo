@@ -27,6 +27,13 @@ const icons = {
   `,
 };
 
+//Цветовые схемы
+const colorTheme = {
+  mainColor: 'main-color',
+  altColor: 'alt-color',
+};
+
+//Состояния фильтра
 const STATUS_FILTER_OPTIONS = {
   all: 'all',
   completed: 'completed',
@@ -229,6 +236,12 @@ const renderStatusFilter = () => {
   nodes.filter.value = store.filterStatus;
 };
 
+//Рендер цветовой темы
+const renderColorTheme = theme => {
+  document.documentElement.classList.remove(...Object.values(colorTheme));
+  document.documentElement.classList.add(theme);
+};
+
 //Мапа всех рендерящих функций
 const renderFunctionsMap = {
   list: renderList,
@@ -304,9 +317,16 @@ nodes.clearButton.addEventListener('click', () => {
   render();
 });
 
+//Сменить тему
+const colorThemeHandler = () => {
+  return document.documentElement.classList.contains(colorTheme.altColor)
+    ? colorTheme.mainColor
+    : colorTheme.altColor;
+};
+
 //Смена темы
 nodes.themeSwitch.addEventListener('click', () => {
-  document.body.classList.toggle('darkmode');
+  renderColorTheme(colorThemeHandler());
 });
 
 document.addEventListener('task:added', () => {

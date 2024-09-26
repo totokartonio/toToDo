@@ -8,7 +8,17 @@
   --background: var(--clr-light);
 }
 
-.darkmode {
+:root.main-color {
+  --clr-light: #fcfbfc;
+  --clr-dark: #343434;
+  --clr-hover: #e8e8e8;
+  --clr-active: #b3b0b0;
+
+  --foreground: var(--clr-dark);
+  --background: var(--clr-light);
+}
+
+:root.alt-color {
   --clr-light: #fcfbfc;
   --clr-dark: #343434;
   --clr-hover: #444444;
@@ -16,6 +26,38 @@
 
   --foreground: var(--clr-light);
   --background: var(--clr-dark);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --clr-light: #fcfbfc;
+    --clr-dark: #343434;
+    --clr-hover: #444444;
+    --clr-active: #5f5f5f;
+
+    --foreground: var(--clr-light);
+    --background: var(--clr-dark);
+  }
+
+  :root.main-color {
+    --clr-light: #fcfbfc;
+    --clr-dark: #343434;
+    --clr-hover: #444444;
+    --clr-active: #5f5f5f;
+
+    --foreground: var(--clr-light);
+    --background: var(--clr-dark);
+  }
+
+  :root.alt-color {
+    --clr-light: #fcfbfc;
+    --clr-dark: #343434;
+    --clr-hover: #e8e8e8;
+    --clr-active: #b3b0b0;
+
+    --foreground: var(--clr-dark);
+    --background: var(--clr-light);
+  }
 }
 
 body {
@@ -185,12 +227,14 @@ body {
 }
 
 .edit-input {
+  background-color: var(--background);
   border: 1px solid var(--foreground);
   height: 25px;
   width: 250px;
   padding: 0 5px;
   margin: 0;
   font-size: 15px;
+  color: var(--foreground);
 }
 
 .confirm-button {
