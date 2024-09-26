@@ -27,15 +27,13 @@ const icons = {
   `,
 };
 
+//Цветовые схемы
 const colorTheme = {
-  light: 'is-light',
-  dark: 'is-dark',
+  mainColor: 'main-color',
+  altColor: 'alt-color',
 };
 
-const defaultColorTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
-  ? colorTheme.dark
-  : colorTheme.light;
-
+//Состояния фильтра
 const STATUS_FILTER_OPTIONS = {
   all: 'all',
   completed: 'completed',
@@ -238,6 +236,7 @@ const renderStatusFilter = () => {
   nodes.filter.value = store.filterStatus;
 };
 
+//Рендер цветовой темы
 const renderColorTheme = theme => {
   document.documentElement.classList.remove(...Object.values(colorTheme));
   document.documentElement.classList.add(theme);
@@ -318,19 +317,12 @@ nodes.clearButton.addEventListener('click', () => {
   render();
 });
 
-//Убрать класс цветовой темы при смене цвета системы
+//Сменить тему
 const colorThemeHandler = () => {
-  if (document.documentElement.classList.contains(colorTheme.light)) {
-    return colorTheme.dark;
-  } else {
-    return colorTheme.light;
-  }
+  return document.documentElement.classList.contains(colorTheme.altColor)
+    ? colorTheme.mainColor
+    : colorTheme.altColor;
 };
-
-// defaultColorTheme.addEventListener('change', () => {
-//   document.documentElement.classList.remove(...Object.values(colorTheme));
-//   renderColorTheme(colorThemeHandler());
-// });
 
 //Смена темы
 nodes.themeSwitch.addEventListener('click', () => {
@@ -347,5 +339,3 @@ document.addEventListener('task:added', () => {
   //Отобразить список на странице
   render();
 });
-
-renderColorTheme(defaultColorTheme);
