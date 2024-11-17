@@ -6,8 +6,34 @@ const nodes = {
   clearButton: document.getElementById('clear-completed'),
   counter: document.getElementById('counter'),
   utilities: document.getElementById('utilities'),
+  themeSwitch: document.getElementById('theme-switch'),
 };
 
+const icons = {
+  bin: `
+    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 800 960" width="24px" fill="currentColor">
+      <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/>
+    </svg>
+  `,
+  edit: `
+    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 800 960" width="24px" fill="currentColor">
+      <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
+    </svg>
+  `,
+  confirmation: `
+    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 800 960" width="24px" fill="currentColor">
+      <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/>
+    </svg>
+  `,
+};
+
+//Цветовые схемы
+const colorTheme = {
+  mainColor: 'main-color',
+  altColor: 'alt-color',
+};
+
+//Состояния фильтра
 const STATUS_FILTER_OPTIONS = {
   all: 'all',
   completed: 'completed',
@@ -114,6 +140,7 @@ const renderTask = task => {
   const deleteButton = document.createElement('button');
   deleteButton.type = 'button';
   deleteButton.classList.add('delete-button');
+  deleteButton.innerHTML = icons.bin;
 
   //eventListener для удаления задачи
   deleteButton.addEventListener('click', deleteTaskHandler(task.id, taskElement));
@@ -131,6 +158,7 @@ const renderTask = task => {
     //Кнопка подтверждения редактирования
     const confirmButton = document.createElement('button');
     confirmButton.type = 'submit';
+    confirmButton.innerHTML = icons.confirmation;
     confirmButton.classList.add('confirm-button');
 
     const inputForm = document.createElement('form');
@@ -154,6 +182,7 @@ const renderTask = task => {
     const editButton = document.createElement('button');
     editButton.type = 'button';
     editButton.classList.add('edit-button');
+    editButton.innerHTML = icons.edit;
 
     //eventListener для редактирования задачи
     editButton.addEventListener('click', editTaskHandler(task.id));
@@ -205,6 +234,12 @@ const renderUtilities = () => {
 
 const renderStatusFilter = () => {
   nodes.filter.value = store.filterStatus;
+};
+
+//Рендер цветовой темы
+const renderColorTheme = theme => {
+  document.documentElement.classList.remove(...Object.values(colorTheme));
+  document.documentElement.classList.add(theme);
 };
 
 //Мапа всех рендерящих функций
@@ -280,6 +315,18 @@ nodes.filter.addEventListener('change', function (event) {
 nodes.clearButton.addEventListener('click', () => {
   clearCompleted(store.list);
   render();
+});
+
+//Сменить тему
+const colorThemeHandler = () => {
+  return document.documentElement.classList.contains(colorTheme.altColor)
+    ? colorTheme.mainColor
+    : colorTheme.altColor;
+};
+
+//Смена темы
+nodes.themeSwitch.addEventListener('click', () => {
+  renderColorTheme(colorThemeHandler());
 });
 
 document.addEventListener('task:added', () => {

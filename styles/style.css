@@ -1,7 +1,70 @@
+:root {
+  --clr-light: #fcfbfc;
+  --clr-dark: #343434;
+  --clr-hover: #e8e8e8;
+  --clr-active: #b3b0b0;
+
+  --foreground: var(--clr-dark);
+  --background: var(--clr-light);
+}
+
+:root.main-color {
+  --clr-light: #fcfbfc;
+  --clr-dark: #343434;
+  --clr-hover: #e8e8e8;
+  --clr-active: #b3b0b0;
+
+  --foreground: var(--clr-dark);
+  --background: var(--clr-light);
+}
+
+:root.alt-color {
+  --clr-light: #fcfbfc;
+  --clr-dark: #343434;
+  --clr-hover: #444444;
+  --clr-active: #5f5f5f;
+
+  --foreground: var(--clr-light);
+  --background: var(--clr-dark);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --clr-light: #fcfbfc;
+    --clr-dark: #343434;
+    --clr-hover: #444444;
+    --clr-active: #5f5f5f;
+
+    --foreground: var(--clr-light);
+    --background: var(--clr-dark);
+  }
+
+  :root.main-color {
+    --clr-light: #fcfbfc;
+    --clr-dark: #343434;
+    --clr-hover: #444444;
+    --clr-active: #5f5f5f;
+
+    --foreground: var(--clr-light);
+    --background: var(--clr-dark);
+  }
+
+  :root.alt-color {
+    --clr-light: #fcfbfc;
+    --clr-dark: #343434;
+    --clr-hover: #e8e8e8;
+    --clr-active: #b3b0b0;
+
+    --foreground: var(--clr-dark);
+    --background: var(--clr-light);
+  }
+}
+
 body {
+  background-color: var(--background);
   font-family: Arial, Helvetica, sans-serif;
   font-size: 15px;
-  color: #343434;
+  color: var(--foreground);
 }
 
 .content-container {
@@ -12,6 +75,16 @@ body {
   gap: 20px;
   padding: 20px 0;
   margin: 0 auto;
+}
+
+.theme-switch {
+  margin: 0;
+  margin-left: auto;
+  color: var(--foreground);
+}
+
+.theme-switch:hover {
+  cursor: pointer;
 }
 
 .new-task-form {
@@ -26,29 +99,33 @@ body {
 }
 
 .new-task-form input {
-  border: 1px solid #343434;
+  border: 1px solid var(--foreground);
+  background-color: var(--background);
   height: 25px;
   width: 250px;
   padding: 0 5px;
   margin: 0;
   font-size: 15px;
+  color: var(--foreground);
 }
 
 .new-task-form button {
   background: none;
-  border: 1px solid #343434;
+  background-color: var(--background);
+  border: 1px solid var(--foreground);
   height: 27px;
   padding: 0 5px;
   margin: 0;
   font-size: 15px;
+  color: var(--foreground);
 }
 
 .new-task-form button:hover {
-  background-color: #e8e8e8;
+  background-color: var(--clr-hover);
 }
 
 .new-task-form button:active {
-  background-color: #b3b0b0;
+  background-color: var(--clr-active);
 }
 
 .utilities {
@@ -65,6 +142,8 @@ body {
 #filter-content {
   max-width: 120px;
   width: 100%;
+  background-color: var(--background);
+  color: var(--foreground);
 }
 
 .task-list {
@@ -77,7 +156,7 @@ body {
   padding: 5px 10px;
   display: flex;
   gap: 10px;
-  border: 1px solid #343434;
+  border: 1px solid var(--foreground);
   align-items: center;
 }
 
@@ -89,8 +168,8 @@ body {
   appearance: none;
   width: 20px;
   height: 20px;
-  background-color: white;
-  border: 1px black solid;
+  background-color: var(--background);
+  border: 1px var(--foreground) solid;
   border-radius: 4px;
   display: inline-block;
   position: relative;
@@ -98,12 +177,12 @@ body {
 }
 
 .task .checkbox:hover {
-  background-color: #e8e8e8;
+  background-color: var(--clr-hover);
 }
 
 .task .checkbox:checked {
-  background-color: white;
-  border: 1px black solid;
+  background-color: var(--background);
+  border: 1px var(--foreground) solid;
 }
 
 .task .checkbox:checked::before {
@@ -113,28 +192,30 @@ body {
   left: 1.5px;
   width: 15px;
   height: 15px;
-  background-color: #343434;
+  background-color: var(--foreground);
   border-radius: 4px;
 }
 
 .task .checkbox:checked:hover::before {
-  background-color: #343434;
+  background-color: var(--foreground);
 }
 
 .edit-button {
-  background: padding-box transparent url(../images/edit.svg) no-repeat center center;
-  border: 1px solid #343434;
+  background: padding-box transparent;
+  border: 1px solid var(--foreground);
   width: 30px;
   height: 30px;
+  color: var(--foreground);
+  padding: 0;
   margin-left: auto;
 }
 
 .edit-button:hover {
-  background-color: #e8e8e8;
+  background-color: var(--clr-hover);
 }
 
 .edit-button:active {
-  background-color: #b3b0b0;
+  background-color: var(--clr-active);
 }
 
 .input-form {
@@ -146,41 +227,62 @@ body {
 }
 
 .edit-input {
-  border: 1px solid #343434;
+  background-color: var(--background);
+  border: 1px solid var(--foreground);
   height: 25px;
   width: 250px;
   padding: 0 5px;
   margin: 0;
   font-size: 15px;
+  color: var(--foreground);
 }
 
 .confirm-button {
-  background: padding-box transparent url(../images/confirm.svg) no-repeat center center;
-  border: 1px solid #343434;
+  background: padding-box transparent;
+  border: 1px solid var(--foreground);
   width: 30px;
   height: 30px;
+  color: var(--foreground);
+  padding: 0;
   margin-left: auto;
 }
 
 .confirm-button:hover {
-  background-color: #e8e8e8;
+  background-color: var(--clr-hover);
 }
 
 .confirm-button:active {
-  background-color: #b3b0b0;
+  background-color: var(--clr-active);
 }
 
 .delete-button {
-  background: padding-box transparent url(../images/bin.svg) no-repeat center center;
-  border: 1px solid #343434;
+  background: padding-box transparent;
+  border: 1px solid var(--foreground);
   width: 30px;
   height: 30px;
+  color: var(--foreground);
+  padding: 0;
 }
 
 .delete-button:hover {
-  background-color: #e8e8e8;
+  background-color: var(--clr-hover);
 }
 
 .delete-button:active {
-  background-color: #b3b0b0;
+  background-color: var(--clr-active);
+}
+
+#clear-completed {
+  background-color: var(--background);
+  padding: 1px 5px;
+  border: 1px solid var(--foreground);
+  color: var(--foreground);
+}
+
+#clear-completed:hover {
+  background-color: var(--clr-hover);
+}
+
+#clear-completed:active {
+  background-color: var(--clr-active);
 }
